@@ -1,11 +1,17 @@
 
 import { useEffect, useRef } from "react";
-import { Monitor, Zap, Shield, Globe, Wifi, Code, Database, Cloud, FileText, Lock, Users, Rocket, Star, CheckCircle, ArrowRight } from "lucide-react";
+import { Monitor, Zap, Shield, Globe, Wifi, Code, Database, Cloud, FileText, Lock, Users, Rocket, Star, CheckCircle, ArrowRight, ChevronLeft } from "lucide-react";
+import { NavigationMenu, NavigationMenuList, NavigationMenuItem, NavigationMenuLink, navigationMenuTriggerStyle } from "@/components/ui/navigation-menu";
 
 const Index = () => {
   const observerRef = useRef<IntersectionObserver | null>(null);
   
   useEffect(() => {
+    // Add style to hide Lovable badge
+    const style = document.createElement('style');
+    style.innerHTML = '#lovable-badge { display: none !important; }';
+    document.head.appendChild(style);
+    
     // Animation for elements that should animate when they enter the viewport
     const animatedElements = document.querySelectorAll('.animate-on-scroll');
     
@@ -26,6 +32,7 @@ const Index = () => {
 
     return () => {
       observerRef.current?.disconnect();
+      document.head.removeChild(style);
     };
   }, []);
 
@@ -98,12 +105,28 @@ const Index = () => {
 
   return (
     <div className="min-h-screen bg-white">
+      {/* Navigation Menu */}
+      <div className="fixed top-0 left-0 z-50 p-4">
+        <NavigationMenu>
+          <NavigationMenuList>
+            <NavigationMenuItem>
+              <NavigationMenuLink 
+                className={navigationMenuTriggerStyle() + " bg-blue-600 text-white hover:bg-blue-700"}
+                href="https://nowhile.com/file"
+              >
+                <ChevronLeft className="w-4 h-4 mr-2" /> Back to nowhile.com/file
+              </NavigationMenuLink>
+            </NavigationMenuItem>
+          </NavigationMenuList>
+        </NavigationMenu>
+      </div>
+      
       {/* Header */}
       <header className="relative overflow-hidden py-20 px-6 bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50">
         <div className="absolute inset-0 bg-gradient-to-r from-blue-100/30 to-purple-100/30"></div>
         <div className="relative max-w-6xl mx-auto text-center">
           <div className="flex items-center justify-center mb-6">
-            <Monitor className="w-16 h-16 text-blue-600 animate-bounce mr-4" />
+            <Monitor className="w-16 h-16 text-blue-600 animate-pulse mr-4" />
             <h1 className="text-6xl font-bold bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 bg-clip-text text-transparent animate-fade-in">
               Nowhile.com
             </h1>
@@ -331,12 +354,37 @@ const Index = () => {
           background: linear-gradient(90deg, #3b82f6, #8b5cf6, #ef4444);
           transform: scaleX(0);
           transform-origin: bottom right;
-          transition: transform 0.3s ease-out;
+          transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
         }
         
         .underline-animation:hover::after {
           transform: scaleX(1);
           transform-origin: bottom left;
+        }
+        
+        /* Smoother animations */
+        .animate-fade-in {
+          animation: smoothFadeIn 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+        }
+        
+        @keyframes smoothFadeIn {
+          0% {
+            opacity: 0;
+            transform: translateY(20px);
+          }
+          100% {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+        
+        /* Prevent animation repetition */
+        .animate-on-scroll {
+          opacity: 0;
+        }
+        
+        .animate-on-scroll.animate-fade-in {
+          opacity: 1;
         }
       `}</style>
     </div>
