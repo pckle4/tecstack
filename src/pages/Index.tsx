@@ -314,7 +314,7 @@ const Index = () => {
         </div>
       </footer>
 
-      <style jsx>{`
+      <style>{`
         .underline-animation {
           position: relative;
           display: inline-block;
